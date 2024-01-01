@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polybius square cipher</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        #div-first, #div-second {
+            width: 46%;
+            padding: 20px;
+            float: left;
+            box-sizing: border-box;
+            border: 1px solid black;
+            border-radius: 10px;
+            background-color: #fff;
+            text-align: center;
+            margin: 10px 2% 0 2%;
+        }
+
+        input[type="text"] {
+            margin: 5px 0;
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        input[type="button"] {
+            margin: 5px 0;
+            padding: 10px;
+            box-sizing: border-box;
+            font-weight: bold;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        #div-second input[type="button"] {
+            background-color: #008000;
+        }
+
+        #div-table {
+            margin-top: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        th, td {
+            border: 2px solid #008000;
+            padding: 10px;
+            text-align: center;
+        }
+        #result1{
+            border: red 2px solid;
+            background-color: #b3b3b3;
+            color:red;
+        }
+        #word{
+            margin-top: 30px;
+        }
+
+    </style>
+</head>
+<body onload="showTable()">
+    <div id="div-first">
+        <input type="text" id="word"><br />
+        <input type="button" id="buttonCypher" onclick="cypher()" value="Cypher">
+        <input type="button" id="buttonDecypher" onclick="decypher()" value="Decypher"><br />
+        <input type="text" disabled id="result1"><br />
+        <input type="button" id="buttonMove" onclick="move()" value="Move">
+    </div>
+    <div id="div-second">
+        
+        <div id="div-table"></div>
+        <input type="button" onclick="shuffleAlphabet()" value="Shuffle" id="buttonShuffle">
+    </div>
+</body>
+<script>
+    let abc = [
+    ["A", "Ą", "B", "C", "Ć", "D", "E"],
+    ["Ę", "F", "G", "H", "I", "J", "K"],
+    ["L", "Ł", "M", "N", "Ń", "O", "Ó"],
+    ["P", "Q", "R", "S", "Ś", "T", "U"],
+    ["V", "W", "X", "Y", "Z", "Ż", "Ź"]
+    ];
+    let result ="";
+    function showTable() {
+            let tableHtml = "<table border='1'>";
+            for (let i = 0; i < abc.length; i++) {
+                tableHtml += "<tr>";
+                for (let j = 0; j < abc[i].length; j++) {
+                    tableHtml += "<td>" + abc[i][j] + "</td>";
+                }
+                tableHtml += "</tr>";
+            }
+            tableHtml += "</table>";
+
+            document.getElementById("div-table").innerHTML = tableHtml;
+        }
+    function shuffleAlphabet() {
+        for (let i = abc.length - 1; i > 0; i--) {
+            for (let j = abc[i].length - 1; j > 0; j--) {
+                const ri = Math.floor(Math.random() * (i + 1));
+                const rj = Math.floor(Math.random() * (j + 1));
+                [abc[i][j], abc[ri][rj]] = [abc[ri][rj], abc[i][j]];
+            }
+        }
+    showTable();
+    }
+    function cypher(){
+        let word1 = document.getElementById("word").value;
+        let word2 = word1.replace(/ /g,"");
+        let word3 = word2.toUpperCase();
+        let word4 = word3.split("");
+        console.log(word4);
+        for(k=0;k<word2.length;k++){
+            //if(word1[i]=="J"){word[i]=I}
+        
+            for(i=0;i<abc.length;i++)
+            {
+                for(j=0;j<abc[i].length;j++)
+                {
+                    if(abc[i][j]===word4[k])
+                    {
+                        result += (i+1).toString() + (j+1).toString() + "";
+                    }
+                }
+            }
+        }
+        document.getElementById("result1").value=result;
+        result="";
+    }
+    function decypher(){
+        let word1 = document.getElementById("word").value;
+        let word2 = word1.replace(/ /g,"");
+        let word3 = word2.split("");
+        console.log(word3);
+        for(let i=0; i<word2.length; i+=2){
+            let row = parseInt(word3[i], 10) - 1; // Odczytaj indeks wiersza
+            let col = parseInt(word3[i + 1], 10) - 1; // Odczytaj indeks kolumny
+
+            
+            if (row >= 0 && row < abc.length && col >= 0 && col < abc[row].length) {
+            result += abc[row][col];
+            } 
+        }
+        document.getElementById("result1").value=result;
+        result="";
+    }
+    function move(){
+        let x = document.getElementById("result1").value;
+        document.getElementById("word").value=x;
+    }
+</script>
+</html>
